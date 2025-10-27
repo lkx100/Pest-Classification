@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy repo into container (Render's build context is repo root)
-COPY . /src
+COPY . /src/
 
 # Install Python deps (assume backend/requirements.txt exists)
 RUN pip install --no-cache-dir -r backend/requirements.txt

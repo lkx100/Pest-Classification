@@ -1,43 +1,28 @@
-# Use slim Python base image
+# backend/Dockerfile
 FROM python:3.12-slim
 
-# Set working directory
-WORKDIR /app
+# Work dir for build steps
+WORKDIR /src
 
-# Install system dependencies for Pillow and TensorFlow
+# Install minimal system deps needed by TF / Pillow
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt /app/
+# Copy repo into container (Render's build context is repo root)
+COPY . /src
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Install Python deps (assume backend/requirements.txt exists)
+RUN pip install --no-cache-dir -r /src/backend/requirements.txt
 
-# Copy application code and model
-# When Render builds from backend/ directory, files are at root of build context
-COPY . /app/
-
-# expose port
+# Set envs
+ENV MODEL_PATH=/src/backend/model.h5
+ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
+
+# Expose (kept for clarity)
 EXPOSE 8000
 
-# Set environment variables
-ENV MODEL_PATH=model.keras
-ENV PYTHONUNBUFFERED=1
-
-# Run with gunicorn for production
-# Using 1 worker to avoid duplicate TF memory allocation
-# Using 4 threads for concurrent request handling
-# Render sets PORT dynamically, default to 8000 for local
-# Use --chdir to ensure gunicorn runs from /app directory
-# CMD gunicorn -k uvicorn.workers.UvicornWorker main:app \
-#     --bind 0.0.0.0:${PORT:-8000} \
-#     --workers 1 \
-#     --threads 4 \
-#     --timeout 120 \
-#     --access-logfile - \
-#     --error-logfile -
-
-CMD ["gunicorn","-k","uvicorn.workers.UvicornWorker","main:app","--bind","0.0.0.0:${PORT:-8000}","--workers","1","--threads","4","--timeout","120"]
+# Ensure we run from the backend folder and allow shell expansion for $PORT
+# Use 1 worker for TF memory reasons; threads provide concurrency.
+CMD ["sh", "-c", "cd /src/backend && exec gunicorn -k uvicorn.workers.UvicornWorker main:app --chdir /src/backend --bind 0.0.0.0:${PORT:-8000} --workers 1 --threads 4 --timeout 120 --access-logfile - --error-logfile -"]

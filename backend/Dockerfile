@@ -25,6 +25,7 @@ EXPOSE 8000
 # Set environment variables
 ENV MODEL_PATH=model.keras
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
 
 # Ensure we're in the correct directory
 WORKDIR /app

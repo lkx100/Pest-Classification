@@ -16,7 +16,7 @@ COPY . /src
 RUN pip install --no-cache-dir -r /src/backend/requirements.txt
 
 # Set envs
-ENV MODEL_PATH=/src/backend/model.h5
+ENV MODEL_PATH=/src/backend/model.keras
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 

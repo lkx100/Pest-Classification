@@ -24,13 +24,17 @@ EXPOSE 8000
 
 # Set environment variables
 ENV MODEL_PATH=model.keras
-ENV PORT=8000
+ENV PYTHONUNBUFFERED=1
+
+# Ensure we're in the correct directory
+WORKDIR /app
 
 # Run with gunicorn for production
 # Using 1 worker to avoid duplicate TF memory allocation
 # Using 4 threads for concurrent request handling
+# Render sets PORT dynamically, default to 8000 for local
 CMD gunicorn -k uvicorn.workers.UvicornWorker main:app \
-    --bind 0.0.0.0:${PORT} \
+    --bind 0.0.0.0:${PORT:-8000} \
     --workers 1 \
     --threads 4 \
     --timeout 120 \

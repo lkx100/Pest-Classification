@@ -10,16 +10,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY requirements.txt /app/
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code and model
 # When Render builds from backend/ directory, files are at root of build context
-COPY . .
+COPY . /app/
 
-# Expose port
+# expose port
+ENV PORT=8000
 EXPOSE 8000
 
 # Set environment variables
@@ -31,10 +32,12 @@ ENV PYTHONUNBUFFERED=1
 # Using 4 threads for concurrent request handling
 # Render sets PORT dynamically, default to 8000 for local
 # Use --chdir to ensure gunicorn runs from /app directory
-CMD gunicorn -k uvicorn.workers.UvicornWorker main:app \
-    --bind 0.0.0.0:${PORT:-8000} \
-    --workers 1 \
-    --threads 4 \
-    --timeout 120 \
-    --access-logfile - \
-    --error-logfile -
+# CMD gunicorn -k uvicorn.workers.UvicornWorker main:app \
+#     --bind 0.0.0.0:${PORT:-8000} \
+#     --workers 1 \
+#     --threads 4 \
+#     --timeout 120 \
+#     --access-logfile - \
+#     --error-logfile -
+
+CMD ["gunicorn","-k","uvicorn.workers.UvicornWorker","main:app","--bind","0.0.0.0:${PORT:-8000}","--workers","1","--threads","4","--timeout","120"]

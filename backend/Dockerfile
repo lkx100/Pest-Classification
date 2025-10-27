@@ -13,10 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . /src
 
 # Install Python deps (assume backend/requirements.txt exists)
-RUN pip install --no-cache-dir -r /src/backend/requirements.txt
+RUN pip install --no-cache-dir -r backend/requirements.txt
 
 # Set envs
-ENV MODEL_PATH=/src/backend/model.keras
+ENV MODEL_PATH=backend/model.keras
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 

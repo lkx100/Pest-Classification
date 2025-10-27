@@ -16,8 +16,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code and model
-COPY main.py .
-COPY model.keras .
+# When Render builds from backend/ directory, files are at root of build context
+COPY . .
 
 # Expose port
 EXPOSE 8000

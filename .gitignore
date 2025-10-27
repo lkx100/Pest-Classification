@@ -12,4 +12,4 @@ development.md
 .github/
 .DS_Store
 
-backend/model.keras
+# backend/model.keras

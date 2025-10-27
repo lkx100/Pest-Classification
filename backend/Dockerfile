@@ -32,7 +32,6 @@ ENV PYTHONUNBUFFERED=1
 # Render sets PORT dynamically, default to 8000 for local
 # Use --chdir to ensure gunicorn runs from /app directory
 CMD gunicorn -k uvicorn.workers.UvicornWorker main:app \
-    --chdir /app \
     --bind 0.0.0.0:${PORT:-8000} \
     --workers 1 \
     --threads 4 \

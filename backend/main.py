@@ -20,7 +20,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.getenv("MODEL_PATH", os.path.join(SCRIPT_DIR, "model.keras"))
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS", 
-    "https://pest-classifier-frontend.onrender.com,http://localhost:5173,http://localhost:3000"
+    "https://castor-pest-classifier.onrender.com,http://localhost:5173,http://localhost:3000"
 ).split(",")
 LABELS = ["Semilooper", "Spodoptera", "Healthy Leaf"]
 IMAGE_SIZE = (224, 224)

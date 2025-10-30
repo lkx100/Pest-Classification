@@ -130,59 +130,6 @@ docker run -p 80:80 pest-classifier-frontend
 
 ---
 
-## ☁️ Render Deployment
-
-### Step 1: Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin <your-repo-url>
-git push -u origin main
-```
-
-### Step 2: Deploy Backend (Web Service)
-
-1. Go to [Render Dashboard](https://dashboard.render.com/)
-2. Click **New +** → **Web Service**
-3. Connect your GitHub repository
-4. Configure:
-   - **Name:** `pest-classifier-backend`
-   - **Root Directory:** `backend`
-   - **Environment:** `Docker` (recommended) or `Python`
-   - **Build Command:** (if Python) `pip install -r requirements.txt`
-   - **Start Command:** 
-     ```bash
-     gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:$PORT --workers 1 --threads 4
-     ```
-   - **Instance Type:** Choose based on needs (Free tier available)
-5. **Environment Variables:**
-   - `MODEL_PATH=model.keras`
-   - `PORT=8000` (Render sets this automatically)
-   - `ALLOWED_ORIGINS=https://your-frontend-url.onrender.com`
-6. Click **Create Web Service**
-7. **Note the deployed URL** (e.g., `https://pest-classifier-backend.onrender.com`)
-
-### Step 3: Deploy Frontend (Static Site)
-
-1. Click **New +** → **Static Site**
-2. Connect your GitHub repository
-3. Configure:
-   - **Name:** `pest-classifier-frontend`
-   - **Root Directory:** `frontend`
-   - **Build Command:** `pnpm install && pnpm build`
-   - **Publish Directory:** `dist`
-4. **Environment Variables:**
-   - `VITE_API_URL=https://pest-classifier-backend.onrender.com` (your backend URL)
-5. Click **Create Static Site**
-
-### Step 4: Update CORS in Backend
-
-After frontend is deployed, update the backend's `ALLOWED_ORIGINS` environment variable to include the frontend URL.
-
----
-
 ## 📡 API Documentation
 
 ### Endpoints
@@ -273,7 +220,6 @@ curl -F "file=@test_images/sample.jpg" http://localhost:8000/predict
 - **Output Classes:**
   - Index 0: **Spodoptera**
   - Index 1: **Semilooper**
-  - Index 2: **Healthy Leaf**
 - **Model File:** `backend/model.keras`
 
 ---

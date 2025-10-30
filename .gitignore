@@ -2,7 +2,6 @@ __pycache__
 pyproject.toml
 .python-version
 uv.lock
-main.py
 QUICKSTART.md
 IMPLEMENTATION_SUMMARY.md
 DEPLOYMENT.md

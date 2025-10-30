@@ -18,7 +18,10 @@ from starlette.concurrency import run_in_threadpool
 # Get the directory where this script is located
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.getenv("MODEL_PATH", os.path.join(SCRIPT_DIR, "model.keras"))
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS", 
+    "https://pest-classifier-frontend.onrender.com,http://localhost:5173,http://localhost:3000"
+).split(",")
 LABELS = ["Semilooper", "Spodoptera", "Healthy Leaf"]
 IMAGE_SIZE = (224, 224)
 MAX_FILE_SIZE = 20 * 1024 * 1024  # 20 MB (allows larger raw images before resize)
